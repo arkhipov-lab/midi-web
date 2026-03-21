@@ -1,73 +1,248 @@
-# React + TypeScript + Vite
+# 🎹 MIDI Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web application for working with MIDI input: recording, visualization, and future analysis (including AI-assisted features).
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Tech Stack
 
-## React Compiler
+- React + TypeScript
+- Vite
+- Jest + Testing Library
+- Node.js + npm
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ⚙️ Requirements
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js: 24.14.0
+- npm: 11.9.0
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Check versions:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+node -v
+npm -v
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📦 Installation
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+or (recommended for clean installs / CI):
+
+```bash
+npm ci
+```
+
+
+---
+
+## 🧑‍💻 Development
+
+Start dev server:
+
+```bash
+npm run dev
+```
+
+---
+
+## 🏗️ Build
+
+```bash
+npm run build
+```
+
+---
+
+## 🧪 Testing
+
+Run tests:
+
+```bash
+npm test
+```
+
+Run tests with coverage:
+
+```bash
+npm run coverage
+```
+
+---
+
+## 🧱 Project Structure
+
+src/
+  app/
+  processes/
+  pages/
+  widgets/
+  features/
+  entities/
+  uikit/
+  service/
+  shared/
+  core/
+
+---
+
+# 🔢 Versioning
+
+Project follows Semantic Versioning (SemVer):
+
+MAJOR.MINOR.PATCH
+
+Example:
+
+1.4.2
+
+---
+
+## 📌 Version Rules
+
+PATCH (1.4.2 → 1.4.3)
+- bug fixes
+- refactoring without behavior changes
+- tests / CI changes
+- internal improvements
+
+MINOR (1.4.2 → 1.5.0)
+- new features
+- extended functionality
+- backward-compatible changes
+
+MAJOR (1.4.2 → 2.0.0)
+- breaking changes
+- incompatible updates
+- changes in data formats or contracts
+
+---
+
+## 🏷️ Version Bump Process
+
+For every PR merged into main, one of the following labels must be set:
+
+- version:patch
+- version:minor
+- version:major
+
+After merge:
+- VERSION file is updated
+- package.json version is updated
+- git tag vX.Y.Z is created
+
+---
+
+# 🔀 Git Workflow
+
+## Branches
+
+- main — production / releases
+- develop — integration branch
+- */base — long-lived branches for large features (epics)
+- feature/* — short-lived feature branches
+
+---
+
+## Workflow
+
+Small features:
+feature/* → develop → main
+
+Large features:
+develop → feature-name/base → feature/*
+
+Flow:
+feature/* → feature-name/base → develop → main
+
+---
+
+## Rules
+
+- Only stable code goes to main
+- develop is for integration
+- */base is for grouping related features
+- */base branch is deleted after merge to develop
+
+---
+
+## Important
+
+Avoid:
+feature/a → feature/b → feature/c
+
+Use:
+feature/a → base
+feature/b → base
+feature/c → base
+
+---
+
+# 📝 Commit Convention
+
+Format:
+type: description
+
+Types:
+
+feat: new feature  
+fix: bug fix  
+chore: config / maintenance  
+refactor: internal code changes  
+test: tests  
+build: build / CI  
+docs: documentation  
+
+Examples:
+
+feat: add midi input listener  
+fix: correct note-off handling  
+refactor: split midi service  
+test: add app render test  
+build: configure github actions  
+
+---
+
+## Breaking Changes
+
+feat!: change session storage format
+
+or
+
+feat: change session format
+
+BREAKING CHANGE: session structure updated
+
+---
+
+# 🤖 CI
+
+On pull requests:
+- tests
+- build
+
+On merge to main:
+- automatic version bump
+- git tag creation
+
+---
+
+# 📁 VERSION File
+
+The project includes a VERSION file.
+
+This file is the single source of truth for the application version.
+
+---
+
+# ⚠️ Rules
+
+- Do not merge into main without a version label
+- Do not commit directly to main
+- Always use pull requests
