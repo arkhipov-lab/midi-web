@@ -1,8 +1,10 @@
 name: version-tag
 
 on:
-  pull_request:
-    types: [closed]
+  workflow_run:
+    workflows: ["deploy"]
+    types:
+      - completed
     branches:
       - main
 
@@ -12,11 +14,13 @@ permissions:
 
 jobs:
   bump-version:
-    if: github.event.pull_request.merged == true
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout merged branch
+      - name: Checkout main
         uses: actions/checkout@v4
         with:
           ref: main
@@ -24,18 +28,37 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24.14.0
           cache: npm
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Determine PR number
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prs = context.payload.workflow_run.pull_requests
+            if (!prs || prs.length === 0) {
+              core.setFailed('No pull request found for this workflow run')
+              return
+            }
+            core.setOutput('number', String(prs[0].number))
 
       - name: Determine version bump
         id: bump
         uses: actions/github-script@v7
         with:
           script: |
-            const labels = context.payload.pull_request.labels.map(l => l.name)
+            const prNumber = Number('${{ steps.pr.outputs.number }}')
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            })
+
+            const labels = pr.labels.map(l => l.name)
 
             let bump = 'patch'
             if (labels.includes('version:major')) bump = 'major'
