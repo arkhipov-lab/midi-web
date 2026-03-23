@@ -1,0 +1,18 @@
+$size-utilities: (
+        width  : (max-content, min-content, fit-content),
+        height : (max-content, min-content, fit-content)
+);
+
+@each $prop, $values in $size-utilities {
+  @each $value in $values {
+    .#{$prop}-#{$value} {
+      #{$prop}: #{$value};
+    }
+  }
+}
+
+.scrollbar-hidden {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
