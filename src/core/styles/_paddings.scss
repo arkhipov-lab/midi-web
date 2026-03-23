@@ -1,0 +1,40 @@
+@use "spacing" as sp;
+
+:root {
+  --pd-3xs: var(--spacing-3xs); /* 1px */
+  --pd-2xs: var(--spacing-2xs); /* 2px */
+  --pd-xs: var(--spacing-xs); /* 4px */
+  --pd-sm: var(--spacing-sm); /* 8px */
+  --pd-md: var(--spacing-md); /* 12px */
+  --pd-lg: var(--spacing-lg); /* 16px */
+  --pd-xl: var(--spacing-xl); /* 24px */
+  --pd-2xl: var(--spacing-2xl); /* 32px */
+  --pd-3xl: var(--spacing-3xl); /* 56px */
+}
+
+$pd-directions: (
+        ""     : (top right bottom left),
+        v      : (top bottom),
+        h      : (left right),
+        left   : (left),
+        right  : (right),
+        top    : (top),
+        bottom : (bottom)
+);
+
+@each $sfx, $val in sp.$spacing-map {
+
+  .pd-#{$sfx} {
+    padding: $val;
+  }
+
+  @each $dir, $sides in $pd-directions {
+    @if $dir != "" {
+      .pd-#{$dir}-#{$sfx} {
+        @each $side in $sides {
+          padding-#{$side}: $val;
+        }
+      }
+    }
+  }
+}
