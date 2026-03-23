@@ -1,0 +1,1 @@
+export {parseMidiMessage} from './parseMidiMessage'
