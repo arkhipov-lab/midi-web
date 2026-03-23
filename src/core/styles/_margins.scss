@@ -1,0 +1,43 @@
+@use "spacing" as sp;
+
+:root {
+  --mg-3xs: var(--spacing-3xs); /* 3px */
+  --mg-2xs: var(--spacing-2xs); /* 2px */
+  --mg-xs: var(--spacing-xs); /* 4px */
+  --mg-sm: var(--spacing-sm); /* 8px */
+  --mg-md: var(--spacing-md); /* 16px */
+  --mg-lg: var(--spacing-lg); /* 24px */
+  --mg-xl: var(--spacing-xl); /* 32px */
+  --mg-2xl: var(--spacing-2xl); /* 40px */
+  --mg-3xl: var(--spacing-3xl); /* 56px */
+}
+
+$mg-directions: (
+        ""      : (top right bottom left),
+        v       : (top bottom),
+        h       : (left right),
+        left    : (left),
+        right   : (right),
+        top     : (top),
+        bottom  : (bottom)
+);
+
+@each $sfx, $val in sp.$spacing-map {
+  .gap-#{$sfx} {
+    gap: $val;
+  }
+
+  .mg-#{$sfx} {
+    margin: $val;
+  }
+
+  @each $dir, $sides in $mg-directions {
+    @if $dir != "" {
+      .mg-#{$dir}-#{$sfx} {
+        @each $side in $sides {
+          margin-#{$side}: $val;
+        }
+      }
+    }
+  }
+}
