@@ -1,0 +1,23 @@
+:root {
+  --spacing-3xs: 0.0625rem; /* 1px */
+  --spacing-2xs: 0.125rem; /* 2px */
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 0.75rem; /* 12px */
+  --spacing-lg: 1rem; /* 16px */
+  --spacing-xl: 1.5rem; /* 24px */
+  --spacing-2xl: 2rem; /* 32px */
+  --spacing-3xl: 3.5rem; /* 56px */
+}
+
+$spacing-map: (
+        3xs : var(--spacing-3xs),  // 0.0625rem
+        2xs : var(--spacing-2xs),  // 0.125rem
+        xs  : var(--spacing-xs),   // 0.25rem
+        sm  : var(--spacing-sm),   // 0.5rem
+        md  : var(--spacing-md),   // 0.75rem
+        lg  : var(--spacing-lg),   // 1rem
+        xl  : var(--spacing-xl),   // 1.5rem
+        2xl : var(--spacing-2xl),  // 2rem
+        3xl : var(--spacing-3xl)   // 3.5rem
+) !default;
