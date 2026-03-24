@@ -1,0 +1,68 @@
+$flex-displays: (flex, inline-flex);
+
+/// 2) Flex-direction
+$flex-directions: (row, row-reverse, column, column-reverse);
+
+/// 3) Flex-wrap
+$flex-wraps: (nowrap, wrap, wrap-reverse);
+
+/// 4) Align-items
+$flex-aligns: (start, center, end, stretch, baseline);
+
+/// 5) Justify-content
+$flex-justifies: (start, center, end, space-between, space-around, space-evenly);
+
+/// 6) Align-content
+$flex-contents: (start, center, end, space-between, space-around, space-evenly, stretch);
+
+/// 7) Align-self
+$flex-selfs: (auto, start, center, end, stretch, baseline);
+
+/// Display
+@each $d in $flex-displays {
+  .#{$d} {
+    display: #{$d};
+  }
+}
+
+/// Direction
+@each $dir in $flex-directions {
+  .#{$dir} {
+    flex-direction: #{$dir};
+  }
+}
+
+/// Wrap
+@each $w in $flex-wraps {
+  .flex-#{$w} {
+    flex-wrap: #{$w};
+  }
+}
+
+/// Align-items
+@each $a in $flex-aligns {
+  .align-items-#{$a} {
+    align-items: #{$a};
+  }
+}
+
+/// Justify-content
+@each $j in $flex-justifies {
+  .justify-content-#{$j} {
+    justify-content: #{$j};
+  }
+}
+
+/// Align-content
+@each $c in $flex-contents {
+  .align-content-#{$c} {
+    align-content: #{$c};
+  }
+}
+
+/// Align-self (для элементов)
+@each $s in $flex-selfs {
+  .align-self-#{$s} {
+    align-self: #{$s};
+  }
+}
