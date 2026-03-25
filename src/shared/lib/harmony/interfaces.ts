@@ -40,6 +40,8 @@ export interface ChordScoreBreakdown {
     heuristicScore: number
     slashPenalty: number
     rootOwnershipBonus: number
+    secondaryRootPenalty: number
+    simplicityBonus: number
     finalScore: number
 }
 

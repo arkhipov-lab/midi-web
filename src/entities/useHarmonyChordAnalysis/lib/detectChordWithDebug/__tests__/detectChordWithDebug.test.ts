@@ -122,4 +122,50 @@ describe('detectChordWithDebug', () => {
         expect(result.selected?.symbol).toBe('C13')
         expect(result.candidates[0].symbol).toBe('C13')
     })
+
+    it('keeps C9 above Em7b5 style reinterpretations', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            40: 100,
+            43: 100,
+            46: 100,
+            50: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('C9')
+
+        const em7b5Candidate = result.candidates.find((candidate) => candidate.symbol === 'Em7b5')
+
+        expect(em7b5Candidate).toBeDefined()
+        expect(result.candidates[0].symbol).toBe('C9')
+        expect((em7b5Candidate?.score ?? 0)).toBeLessThan(result.candidates[0].score)
+    })
+
+    it('keeps C11 above alternative-root candidates', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            40: 100,
+            43: 100,
+            46: 100,
+            50: 100,
+            53: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('C11')
+        expect(result.candidates[0].symbol).toBe('C11')
+    })
+
+    it('keeps C13 above alternative-root candidates', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            40: 100,
+            43: 100,
+            46: 100,
+            50: 100,
+            57: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('C13')
+        expect(result.candidates[0].symbol).toBe('C13')
+    })
 })

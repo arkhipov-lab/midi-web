@@ -34,6 +34,8 @@ export function formatChordDebugText(data: ChordAnalysisDebugData): string {
                 `heuristic=${breakdown.heuristicScore}`,
                 `rootOwnershipBonus=${breakdown.rootOwnershipBonus}`,
                 `slashPenalty=${breakdown.slashPenalty}`,
+                `secondaryRootPenalty=${breakdown.secondaryRootPenalty}`,
+                `simplicityBonus=${breakdown.simplicityBonus}`,
                 `final=${breakdown.finalScore}`,
             ].join(' | ')
         })

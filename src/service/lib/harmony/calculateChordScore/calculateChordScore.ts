@@ -10,6 +10,10 @@ import {
     countMissingSignaturePitchClasses,
     evaluateChordHeuristics,
 } from '@shared/lib'
+import {
+    getSecondaryRootPenalty,
+    getSimplicityBonus,
+} from './lib'
 
 interface CalculateChordScoreOptions {
     inputPitchClasses: number[]
@@ -24,10 +28,10 @@ interface CalculateChordScoreOptions {
     category: 'triad' | 'seventh' | 'extended'
     requiresSeventh: boolean
     isSlashChord: boolean
+    templateIntervalCount: number
 }
 
 export function calculateChordScore(options: CalculateChordScoreOptions) {
-
     const {
         inputPitchClasses,
         templatePitchClasses,
@@ -41,6 +45,7 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
         category,
         requiresSeventh,
         isSlashChord,
+        templateIntervalCount,
     } = options
 
     const matched = countMatchedPitchClasses(inputPitchClasses, templatePitchClasses)
@@ -175,8 +180,32 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
         }
     }
 
+    const simplicityBonus = getSimplicityBonus({
+        category,
+        templateIntervalCount,
+        matchedRequired,
+        requiredPitchClasses,
+        matchedSignature,
+        missingSignature,
+        extra,
+    })
+
+    const secondaryRootPenalty = getSecondaryRootPenalty({
+        bassPitchClass,
+        rootPitchClass,
+        inputPitchClasses,
+        category,
+        isSlashChord,
+        matchedRequired,
+        requiredPitchClasses,
+        matchedSignature,
+        missingSignature,
+    })
+
     finalScore += rootOwnershipBonus
     finalScore -= slashPenalty
+    finalScore += simplicityBonus
+    finalScore -= secondaryRootPenalty
 
     if (inputPitchClasses.length > templatePitchClasses.length + 2) {
         finalScore -= 4
@@ -195,6 +224,8 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
         heuristicScore,
         slashPenalty,
         rootOwnershipBonus,
+        secondaryRootPenalty,
+        simplicityBonus,
         finalScore,
     }
 }

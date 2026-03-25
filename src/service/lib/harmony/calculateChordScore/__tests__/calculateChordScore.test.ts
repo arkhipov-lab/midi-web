@@ -1,9 +1,9 @@
 import {calculateChordScore} from '../calculateChordScore'
 
 describe('calculateChordScore', () => {
-    it('penalizes slash chords compared to direct root ownership', () => {
-        const direct = calculateChordScore({
-            inputPitchClasses: [0, 4, 7, 10, 2],
+    it('penalizes non-slash secondary roots without bass ownership', () => {
+        const primary = calculateChordScore({
+            inputPitchClasses: [0, 2, 4, 7, 10],
             templatePitchClasses: [0, 2, 4, 7, 10],
             requiredPitchClasses: [0, 4, 10],
             optionalPitchClasses: [2, 7],
@@ -15,30 +15,31 @@ describe('calculateChordScore', () => {
             category: 'extended',
             requiresSeventh: true,
             isSlashChord: false,
+            templateIntervalCount: 5,
         })
 
-        const slash = calculateChordScore({
-            inputPitchClasses: [0, 4, 7, 10, 2],
-            templatePitchClasses: [4, 7, 10, 0],
-            requiredPitchClasses: [4, 7, 10, 0],
+        const secondary = calculateChordScore({
+            inputPitchClasses: [0, 2, 4, 7, 10],
+            templatePitchClasses: [4, 7, 10, 2],
+            requiredPitchClasses: [4, 7, 10, 2],
             optionalPitchClasses: [],
             omittablePitchClasses: [],
-            signaturePitchClasses: [10, 0],
+            signaturePitchClasses: [10, 2],
             bassPitchClass: 0,
             rootPitchClass: 4,
             templatePriority: 21,
             category: 'seventh',
             requiresSeventh: false,
-            isSlashChord: true,
+            isSlashChord: false,
+            templateIntervalCount: 4,
         })
 
-        expect(direct.finalScore).toBeGreaterThan(slash.finalScore)
-        expect(slash.slashPenalty).toBeGreaterThan(0)
-        expect(direct.rootOwnershipBonus).toBeGreaterThan(slash.rootOwnershipBonus)
+        expect(primary.finalScore).toBeGreaterThan(secondary.finalScore)
+        expect(secondary.secondaryRootPenalty).toBeGreaterThan(0)
     })
 
-    it('rewards bass equal to root more than root only present above bass', () => {
-        const bassOwned = calculateChordScore({
+    it('gives simplicity bonus to strong plain explanations', () => {
+        const plain = calculateChordScore({
             inputPitchClasses: [2, 6, 9],
             templatePitchClasses: [2, 6, 9],
             requiredPitchClasses: [2, 6, 9],
@@ -51,23 +52,26 @@ describe('calculateChordScore', () => {
             category: 'triad',
             requiresSeventh: false,
             isSlashChord: false,
+            templateIntervalCount: 3,
         })
 
-        const rootNotInBass = calculateChordScore({
+        const decorated = calculateChordScore({
             inputPitchClasses: [2, 6, 9],
-            templatePitchClasses: [6, 9, 2],
-            requiredPitchClasses: [6, 9, 2],
-            optionalPitchClasses: [],
+            templatePitchClasses: [2, 6, 9, 11],
+            requiredPitchClasses: [2, 6, 9],
+            optionalPitchClasses: [11],
             omittablePitchClasses: [],
-            signaturePitchClasses: [],
+            signaturePitchClasses: [11],
             bassPitchClass: 2,
-            rootPitchClass: 6,
-            templatePriority: 10,
+            rootPitchClass: 2,
+            templatePriority: 16,
             category: 'triad',
             requiresSeventh: false,
-            isSlashChord: true,
+            isSlashChord: false,
+            templateIntervalCount: 4,
         })
 
-        expect(bassOwned.rootOwnershipBonus).toBeGreaterThan(rootNotInBass.rootOwnershipBonus)
+        expect(plain.simplicityBonus).toBeGreaterThanOrEqual(decorated.simplicityBonus)
+        expect(plain.finalScore).toBeGreaterThan(decorated.finalScore)
     })
 })

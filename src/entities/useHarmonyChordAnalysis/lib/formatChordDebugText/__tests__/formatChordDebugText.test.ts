@@ -23,7 +23,7 @@ describe('formatChordDebugText', () => {
         expect(text).toContain('input midi notes: [60, 64, 67]')
     })
 
-    it('includes slash and root ownership metrics in debug text', () => {
+    it('includes secondary root and simplicity metrics in debug text', () => {
         const text = formatChordDebugText({
             inputMidiNotes: [60, 64, 67],
             inputPitchClasses: [0, 4, 7],
@@ -52,13 +52,15 @@ describe('formatChordDebugText', () => {
                         heuristicScore: 40,
                         slashPenalty: 0,
                         rootOwnershipBonus: 18,
+                        secondaryRootPenalty: 0,
+                        simplicityBonus: 12,
                         finalScore: 100,
                     },
                 },
             ],
         })
 
-        expect(text).toContain('rootOwnershipBonus=18')
-        expect(text).toContain('slashPenalty=0')
+        expect(text).toContain('secondaryRootPenalty=0')
+        expect(text).toContain('simplicityBonus=12')
     })
 })

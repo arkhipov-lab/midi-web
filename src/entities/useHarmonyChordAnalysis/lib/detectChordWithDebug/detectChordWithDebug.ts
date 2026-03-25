@@ -76,6 +76,7 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
                 category: template.category ?? 'triad',
                 requiresSeventh: template.requiresSeventh ?? false,
                 isSlashChord: symbolInfo.isSlashChord,
+                templateIntervalCount: template.intervals.length,
             })
 
             const debugCandidate = {
