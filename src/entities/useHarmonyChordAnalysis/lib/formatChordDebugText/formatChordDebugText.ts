@@ -29,6 +29,8 @@ export function formatChordDebugText(data: ChordAnalysisDebugData): string {
                 `missingRequired=${breakdown.missingRequired}`,
                 `matchedOptional=${breakdown.matchedOptional}`,
                 `missingOmittable=${breakdown.missingOmittable}`,
+                `matchedSignature=${breakdown.matchedSignature}`,
+                `missingSignature=${breakdown.missingSignature}`,
                 `heuristic=${breakdown.heuristicScore}`,
                 `final=${breakdown.finalScore}`,
             ].join(' | ')

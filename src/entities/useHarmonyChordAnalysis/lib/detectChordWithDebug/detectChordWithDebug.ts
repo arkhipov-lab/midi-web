@@ -49,10 +49,12 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
             const requiredIntervals = template.requiredIntervals ?? template.intervals
             const optionalIntervals = template.optionalIntervals ?? []
             const omittableIntervals = template.omittableIntervals ?? []
+            const signatureIntervals = template.signatureIntervals ?? []
 
             const requiredPitchClasses = buildChordPitchClasses(rootPitchClass, requiredIntervals)
             const optionalPitchClasses = buildChordPitchClasses(rootPitchClass, optionalIntervals)
             const omittablePitchClasses = buildChordPitchClasses(rootPitchClass, omittableIntervals)
+            const signaturePitchClasses = buildChordPitchClasses(rootPitchClass, signatureIntervals)
 
             const breakdown = calculateChordScore({
                 inputPitchClasses: normalized.pitchClasses,
@@ -60,6 +62,7 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
                 requiredPitchClasses,
                 optionalPitchClasses,
                 omittablePitchClasses,
+                signaturePitchClasses,
                 bassPitchClass: normalized.bassPitchClass,
                 rootPitchClass,
                 templatePriority: template.priority,

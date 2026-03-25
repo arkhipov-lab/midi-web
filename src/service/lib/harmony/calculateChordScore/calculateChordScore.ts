@@ -1,12 +1,13 @@
 import {
-    ChordScoreBreakdown,
     countExtraPitchClasses,
     countMatchedOptionalPitchClasses,
     countMatchedPitchClasses,
     countMatchedRequiredPitchClasses,
+    countMatchedSignaturePitchClasses,
     countMissingOmittablePitchClasses,
     countMissingPitchClasses,
     countMissingRequiredPitchClasses,
+    countMissingSignaturePitchClasses,
     evaluateChordHeuristics,
 } from '@shared/lib'
 
@@ -16,6 +17,7 @@ interface CalculateChordScoreOptions {
     requiredPitchClasses: number[]
     optionalPitchClasses: number[]
     omittablePitchClasses: number[]
+    signaturePitchClasses: number[]
     bassPitchClass: number | null
     rootPitchClass: number
     templatePriority: number
@@ -23,7 +25,7 @@ interface CalculateChordScoreOptions {
     requiresSeventh: boolean
 }
 
-export function calculateChordScore(options: CalculateChordScoreOptions): ChordScoreBreakdown {
+export function calculateChordScore(options: CalculateChordScoreOptions) {
 
     const {
         inputPitchClasses,
@@ -31,6 +33,7 @@ export function calculateChordScore(options: CalculateChordScoreOptions): ChordS
         requiredPitchClasses,
         optionalPitchClasses,
         omittablePitchClasses,
+        signaturePitchClasses,
         bassPitchClass,
         rootPitchClass,
         templatePriority,
@@ -58,6 +61,14 @@ export function calculateChordScore(options: CalculateChordScoreOptions): ChordS
         inputPitchClasses,
         omittablePitchClasses,
     )
+    const matchedSignature = countMatchedSignaturePitchClasses(
+        inputPitchClasses,
+        signaturePitchClasses,
+    )
+    const missingSignature = countMissingSignaturePitchClasses(
+        inputPitchClasses,
+        signaturePitchClasses,
+    )
 
     const heuristicScore = evaluateChordHeuristics({
         inputPitchClasses,
@@ -75,7 +86,11 @@ export function calculateChordScore(options: CalculateChordScoreOptions): ChordS
 
     finalScore += matchedRequired * 11
     finalScore -= missingRequired * 16
+
     finalScore += matchedOptional * 7
+
+    finalScore += matchedSignature * 16
+    finalScore -= missingSignature * 22
 
     const missingNonOmittable = Math.max(0, missing - missingOmittable)
     finalScore -= missingNonOmittable * 7
@@ -88,6 +103,10 @@ export function calculateChordScore(options: CalculateChordScoreOptions): ChordS
 
     if (isFullRequiredMatch) {
         finalScore += 14
+    }
+
+    if (missingSignature === 0 && signaturePitchClasses.length > 0) {
+        finalScore += 10
     }
 
     finalScore += templatePriority
@@ -130,6 +149,8 @@ export function calculateChordScore(options: CalculateChordScoreOptions): ChordS
         missingRequired,
         matchedOptional,
         missingOmittable,
+        matchedSignature,
+        missingSignature,
         heuristicScore,
         finalScore,
     }

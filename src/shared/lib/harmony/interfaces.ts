@@ -11,6 +11,7 @@ export interface ChordTemplate {
     requiredIntervals?: number[]
     optionalIntervals?: number[]
     omittableIntervals?: number[]
+    signatureIntervals?: number[]
     symbolSuffix: string
     priority: number
     category?: 'triad' | 'seventh' | 'extended'
@@ -34,6 +35,8 @@ export interface ChordScoreBreakdown {
     missingRequired: number
     matchedOptional: number
     missingOmittable: number
+    matchedSignature: number
+    missingSignature: number
     heuristicScore: number
     finalScore: number
 }

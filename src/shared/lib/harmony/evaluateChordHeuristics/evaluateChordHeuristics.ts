@@ -7,6 +7,10 @@ interface EvaluateChordHeuristicsOptions {
     category: 'triad' | 'seventh' | 'extended'
 }
 
+function hasPitchClass(inputPitchClasses: number[], pitchClass: number): boolean {
+    return inputPitchClasses.includes(pitchClass)
+}
+
 export function evaluateChordHeuristics(options: EvaluateChordHeuristicsOptions): number {
 
     const {
@@ -44,8 +48,10 @@ export function evaluateChordHeuristics(options: EvaluateChordHeuristicsOptions)
     const normalizedRequired = requiredPitchClasses
         .map((pitchClass) => (pitchClass - rootPitchClass + 12) % 12)
 
+    const hasSecond = normalizedRequired.includes(2)
     const hasMinorThird = normalizedRequired.includes(3)
     const hasMajorThird = normalizedRequired.includes(4)
+    const hasFourth = normalizedRequired.includes(5)
     const hasDiminishedFifth = normalizedRequired.includes(6)
     const hasPerfectFifth = normalizedRequired.includes(7)
     const hasAugmentedFifth = normalizedRequired.includes(8)
@@ -53,10 +59,21 @@ export function evaluateChordHeuristics(options: EvaluateChordHeuristicsOptions)
     const hasMinorSeventh = normalizedRequired.includes(10)
     const hasMajorSeventh = normalizedRequired.includes(11)
 
+    const secondPitchClass = (rootPitchClass + 2) % 12
+    const minorThirdPitchClass = (rootPitchClass + 3) % 12
+    const majorThirdPitchClass = (rootPitchClass + 4) % 12
+    const fourthPitchClass = (rootPitchClass + 5) % 12
+    const perfectFifthPitchClass = (rootPitchClass + 7) % 12
+
+    const thirdPresent = hasPitchClass(inputPitchClasses, minorThirdPitchClass) || hasPitchClass(inputPitchClasses, majorThirdPitchClass)
+    const secondPresent = hasPitchClass(inputPitchClasses, secondPitchClass)
+    const fourthPresent = hasPitchClass(inputPitchClasses, fourthPitchClass)
+    const perfectFifthPresent = hasPitchClass(inputPitchClasses, perfectFifthPitchClass)
+
     if (hasMinorThird || hasMajorThird) {
         const thirdPitchClass = hasMinorThird
-            ? (rootPitchClass + 3) % 12
-            : (rootPitchClass + 4) % 12
+            ? minorThirdPitchClass
+            : majorThirdPitchClass
 
         if (inputSet.has(thirdPitchClass)) {
             score += 9
@@ -69,7 +86,7 @@ export function evaluateChordHeuristics(options: EvaluateChordHeuristicsOptions)
         const fifthPitchClass = hasDiminishedFifth
             ? (rootPitchClass + 6) % 12
             : hasPerfectFifth
-                ? (rootPitchClass + 7) % 12
+                ? perfectFifthPitchClass
                 : (rootPitchClass + 8) % 12
 
         if (inputSet.has(fifthPitchClass)) {
@@ -112,6 +129,35 @@ export function evaluateChordHeuristics(options: EvaluateChordHeuristicsOptions)
         if (requiredCoverage === 1) {
             score += 4
         }
+    }
+
+    // sus/add disambiguation
+    if (hasSecond) {
+        if (secondPresent && !thirdPresent && perfectFifthPresent) {
+            score += 14
+        }
+
+        if (secondPresent && thirdPresent) {
+            score -= 6
+        }
+    }
+
+    if (hasFourth) {
+        if (fourthPresent && !thirdPresent && perfectFifthPresent) {
+            score += 14
+        }
+
+        if (fourthPresent && thirdPresent) {
+            score -= 6
+        }
+    }
+
+    if (!hasSecond && secondPresent && !thirdPresent) {
+        score -= 8
+    }
+
+    if (!hasFourth && fourthPresent && !thirdPresent) {
+        score -= 8
     }
 
     return score
