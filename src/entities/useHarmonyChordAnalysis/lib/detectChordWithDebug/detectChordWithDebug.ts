@@ -56,6 +56,13 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
             const omittablePitchClasses = buildChordPitchClasses(rootPitchClass, omittableIntervals)
             const signaturePitchClasses = buildChordPitchClasses(rootPitchClass, signatureIntervals)
 
+            const symbolInfo = createChordSymbol({
+                rootPitchClass,
+                symbolSuffix: template.symbolSuffix,
+                bassPitchClass: normalized.bassPitchClass,
+                templatePitchClasses,
+            })
+
             const breakdown = calculateChordScore({
                 inputPitchClasses: normalized.pitchClasses,
                 templatePitchClasses,
@@ -68,16 +75,10 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
                 templatePriority: template.priority,
                 category: template.category ?? 'triad',
                 requiresSeventh: template.requiresSeventh ?? false,
+                isSlashChord: symbolInfo.isSlashChord,
             })
 
-            const symbolInfo = createChordSymbol({
-                rootPitchClass,
-                symbolSuffix: template.symbolSuffix,
-                bassPitchClass: normalized.bassPitchClass,
-                templatePitchClasses,
-            })
-
-            const debugCandidate: ChordCandidateDebugItem = {
+            const debugCandidate = {
                 symbol: symbolInfo.symbol,
                 type: template.type,
                 root: getPitchClassName(rootPitchClass),

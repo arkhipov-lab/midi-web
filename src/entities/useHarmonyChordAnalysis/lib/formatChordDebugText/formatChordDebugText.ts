@@ -32,6 +32,8 @@ export function formatChordDebugText(data: ChordAnalysisDebugData): string {
                 `matchedSignature=${breakdown.matchedSignature}`,
                 `missingSignature=${breakdown.missingSignature}`,
                 `heuristic=${breakdown.heuristicScore}`,
+                `rootOwnershipBonus=${breakdown.rootOwnershipBonus}`,
+                `slashPenalty=${breakdown.slashPenalty}`,
                 `final=${breakdown.finalScore}`,
             ].join(' | ')
         })

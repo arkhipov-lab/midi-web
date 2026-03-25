@@ -23,6 +23,7 @@ interface CalculateChordScoreOptions {
     templatePriority: number
     category: 'triad' | 'seventh' | 'extended'
     requiresSeventh: boolean
+    isSlashChord: boolean
 }
 
 export function calculateChordScore(options: CalculateChordScoreOptions) {
@@ -39,6 +40,7 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
         templatePriority,
         category,
         requiresSeventh,
+        isSlashChord,
     } = options
 
     const matched = countMatchedPitchClasses(inputPitchClasses, templatePitchClasses)
@@ -137,6 +139,45 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
 
     finalScore += heuristicScore
 
+    let rootOwnershipBonus = 0
+
+    if (bassPitchClass === rootPitchClass) {
+        rootOwnershipBonus += 18
+    } else if (inputPitchClasses.includes(rootPitchClass)) {
+        rootOwnershipBonus += 6
+    } else {
+        rootOwnershipBonus -= 12
+    }
+
+    if (matchedRequired === requiredPitchClasses.length) {
+        rootOwnershipBonus += 8
+    }
+
+    if (matchedSignature > 0 && missingSignature === 0) {
+        rootOwnershipBonus += 4
+    }
+
+    let slashPenalty = 0
+
+    if (isSlashChord) {
+        slashPenalty += 18
+
+        if (bassPitchClass !== null && bassPitchClass !== rootPitchClass) {
+            slashPenalty += 6
+        }
+
+        if (category === 'extended') {
+            slashPenalty += 6
+        }
+
+        if (matchedRequired === requiredPitchClasses.length && matchedSignature > 0) {
+            slashPenalty -= 4
+        }
+    }
+
+    finalScore += rootOwnershipBonus
+    finalScore -= slashPenalty
+
     if (inputPitchClasses.length > templatePitchClasses.length + 2) {
         finalScore -= 4
     }
@@ -152,6 +193,8 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
         matchedSignature,
         missingSignature,
         heuristicScore,
+        slashPenalty,
+        rootOwnershipBonus,
         finalScore,
     }
 }

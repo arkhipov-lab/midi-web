@@ -79,4 +79,47 @@ describe('detectChordWithDebug', () => {
         expect(result.candidates[0].symbol).toBe('C9')
         expect(result.candidates[1].symbol).not.toBe('C9')
     })
+
+    it('keeps direct D above slash reinterpretations', () => {
+        const result = detectChordWithDebug({
+            38: 100,
+            42: 100,
+            45: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('D')
+        expect(result.candidates[0].symbol).toBe('D')
+        expect(result.candidates[1].symbol).not.toBe('Bm7/D')
+    })
+
+    it('keeps C9 above alternative slash or re-rooted readings', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            40: 100,
+            43: 100,
+            46: 100,
+            50: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('C9')
+
+        const topFiveSymbols = result.candidates.slice(0, 5).map((candidate) => candidate.symbol)
+
+        expect(topFiveSymbols[0]).toBe('C9')
+        expect(topFiveSymbols).not.toContain('A#6/9/C')
+    })
+
+    it('keeps C13 above slash alternatives', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            40: 100,
+            43: 100,
+            46: 100,
+            50: 100,
+            57: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('C13')
+        expect(result.candidates[0].symbol).toBe('C13')
+    })
 })

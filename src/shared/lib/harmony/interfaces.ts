@@ -38,6 +38,8 @@ export interface ChordScoreBreakdown {
     matchedSignature: number
     missingSignature: number
     heuristicScore: number
+    slashPenalty: number
+    rootOwnershipBonus: number
     finalScore: number
 }
 
