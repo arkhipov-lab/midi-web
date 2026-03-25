@@ -50,8 +50,11 @@ export function formatChordDebugText(data: ChordAnalysisDebugData): string {
         })
         .join('\n')
 
-    const alternativesText = data.alternatives.length > 0
-        ? data.alternatives
+    const alternatives = data.alternatives ?? []
+    const ambiguity = data.ambiguity ?? null
+
+    const alternativesText = alternatives.length > 0
+        ? alternatives
             .map((alternative, index) => [
                 `${index + 1}. ${alternative.symbol}`,
                 `type=${alternative.type}`,
@@ -60,7 +63,6 @@ export function formatChordDebugText(data: ChordAnalysisDebugData): string {
                 `slash=${alternative.isSlashChord ? 'yes' : 'no'}`,
                 `score=${alternative.score}`,
                 `confidence=${alternative.confidence ?? 'null'}`,
-                `relation=${alternative.relationToSelected}`,
             ].join(' | '))
             .join('\n')
         : 'No alternatives'
@@ -78,10 +80,10 @@ export function formatChordDebugText(data: ChordAnalysisDebugData): string {
         `confidence: ${data.selected?.confidence ?? 'null'}`,
         '',
         'ambiguity:',
-        `isAmbiguous: ${data.ambiguity?.isAmbiguous ?? false}`,
-        `level: ${data.ambiguity?.level ?? 'null'}`,
-        `reason: ${data.ambiguity?.reason ?? 'null'}`,
-        `primaryAlternatives: [${data.ambiguity?.primaryAlternatives.join(', ') ?? ''}]`,
+        `isAmbiguous: ${ambiguity?.isAmbiguous ?? false}`,
+        `level: ${ambiguity?.level ?? 'low'}`,
+        `reason: ${ambiguity?.reason ?? 'null'}`,
+        `primaryAlternatives: [${ambiguity?.primaryAlternatives?.join(', ') ?? ''}]`,
         '',
         'alternatives:',
         alternativesText,
