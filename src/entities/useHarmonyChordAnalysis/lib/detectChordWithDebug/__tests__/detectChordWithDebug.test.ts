@@ -367,4 +367,77 @@ describe('detectChordWithDebug', () => {
         expect(result.selected?.symbol).toBe('C7(no3)')
         expect(result.selected?.confidence ?? 1).toBeLessThan(1)
     })
+
+    it('exposes slash reinterpretation as alternative for Dsus4', () => {
+        const result = detectChordWithDebug({
+            38: 100,
+            43: 100,
+            45: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('Dsus4')
+        expect(result.alternatives.length).toBeGreaterThan(0)
+
+        const alt = result.alternatives.find((item) => item.symbol === 'Gsus2/D')
+
+        expect(alt).toBeDefined()
+        expect(alt?.relationToSelected).toBe('inversion-or-slash')
+    })
+
+    it('marks Dsus4 as ambiguous because of slash reinterpretation', () => {
+        const result = detectChordWithDebug({
+            38: 100,
+            43: 100,
+            45: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('Dsus4')
+        expect(result.ambiguity?.isAmbiguous).toBe(true)
+    })
+
+    it('marks Dsus2 as ambiguous because of slash reinterpretation', () => {
+        const result = detectChordWithDebug({
+            38: 100,
+            40: 100,
+            45: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('Dsus2')
+        expect(result.ambiguity?.isAmbiguous).toBe(true)
+        expect(result.ambiguity?.reason).toBe('context_dependent_naming')
+    })
+
+    it('marks omission labels as ambiguous', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            43: 100,
+            46: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('C7(no3)')
+        expect(result.ambiguity?.isAmbiguous).toBe(true)
+        expect(result.ambiguity?.reason).toBe('incomplete_voicing')
+    })
+
+    it('does not mark plain major triad as ambiguous when competitors are distant', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            40: 100,
+            43: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('C')
+        expect(result.ambiguity?.isAmbiguous).toBe(false)
+    })
+
+    it('keeps confidence below 1 for ambiguous slash-equivalent sus chord', () => {
+        const result = detectChordWithDebug({
+            38: 100,
+            43: 100,
+            45: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('Dsus4')
+        expect(result.selected?.confidence ?? 1).toBeLessThan(1)
+    })
 })

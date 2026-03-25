@@ -77,6 +77,8 @@ export interface ChordAnalysisDebugData {
     bassPitchClass: number | null
     candidates: ChordCandidateDebugItem[]
     selected: DetectedChordInfo | null
+    alternatives: ChordAlternativeInfo[]
+    ambiguity: ChordAmbiguityInfo | null
 }
 
 export interface NormalizedActiveNotes {
@@ -85,4 +87,36 @@ export interface NormalizedActiveNotes {
     weightedPitchClasses: WeightedPitchClass[]
     bassMidiNote: number | null
     bassPitchClass: number | null
+}
+
+export type ChordAlternativeRelation =
+    | 'equivalent-quality'
+    | 'inversion-or-slash'
+    | 'same-root-subset'
+    | 'same-root-extension'
+    | 'enharmonic-reinterpretation'
+    | 'competing-analysis'
+
+export interface ChordAlternativeInfo {
+    symbol: string
+    type: string
+    root: string
+    bass: string | null
+    isSlashChord: boolean
+    score: number
+    confidence: number | null
+    relationToSelected: ChordAlternativeRelation
+}
+
+export interface ChordAmbiguityInfo {
+    isAmbiguous: boolean
+    level: 'low' | 'medium' | 'high'
+    reason:
+        | 'close_scores'
+        | 'equivalent_spelling'
+        | 'context_dependent_naming'
+        | 'incomplete_voicing'
+        | 'multiple_valid_structures'
+        | null
+    primaryAlternatives: string[]
 }

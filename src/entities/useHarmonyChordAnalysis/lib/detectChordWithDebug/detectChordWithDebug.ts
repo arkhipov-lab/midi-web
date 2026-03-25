@@ -6,6 +6,7 @@ import {
     ChordCandidateDebugItem,
     ChordScoreBreakdown,
     DetectedChordInfo,
+    ChordAlternativeInfo,
 } from '@shared/lib'
 import {
     calculateChordScore,
@@ -13,7 +14,8 @@ import {
     normalizeActiveNotes,
 } from '@service/lib'
 import {
-    getChordConfidence,
+    classifyAlternativeRelation,
+    evaluateChordAmbiguity,
 } from './lib'
 import {ActiveNotesMap} from '@entities/useMidiPerformanceState'
 
@@ -42,6 +44,8 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
             bassPitchClass: null,
             candidates: [],
             selected: null,
+            alternatives: [],
+            ambiguity: null,
         }
     }
 
@@ -137,6 +141,8 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
             bassPitchClass: normalized.bassPitchClass,
             candidates: debugCandidates.slice(0, 20),
             selected: null,
+            alternatives: [],
+            ambiguity: null,
         }
     }
 
@@ -150,27 +156,81 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
 
     const best = candidates[0]
 
-    const secondBestScore = candidates[1]?.score ?? 0
-
-    const confidence = getChordConfidence({
-        bestScore: best.score,
-        secondScore: secondBestScore,
-        isSlashChord: best.isSlashChord,
-        incompleteConfidenceFactor: best.breakdown.incompleteConfidenceFactor,
-    })
+    const confidenceBase = best.score / (best.score + 60)
+    const rawConfidence = confidenceBase * best.breakdown.incompleteConfidenceFactor
 
     const selected: DetectedChordInfo = {
         root: getPitchClassName(best.rootPitchClass),
         type: best.type,
         symbol: best.symbol,
-        confidence,
+        confidence: null,
         bass: best.isSlashChord && best.bassPitchClass !== null
             ? getPitchClassName(best.bassPitchClass)
             : null,
         isSlashChord: best.isSlashChord,
-        isOmissionLabel: best.isOmissionLabel,
-        omissionType: best.omissionType,
+        isOmissionLabel: best.symbol.includes('(no3)') || best.symbol.includes('(no5)'),
+        omissionType: best.symbol.includes('(no3)')
+            ? 'no3'
+            : best.symbol.includes('(no5)')
+                ? 'no5'
+                : null,
     }
+
+    const alternatives: ChordAlternativeInfo[] = candidates
+        .slice(1, 8)
+        .map((candidate) => {
+            const candidateConfidenceBase = candidate.score / (candidate.score + 60)
+            const candidateConfidence = Math.max(
+                0,
+                Math.min(1, candidateConfidenceBase * candidate.breakdown.incompleteConfidenceFactor),
+            )
+
+            const alternativeBass = candidate.isSlashChord && candidate.bassPitchClass !== null
+                ? getPitchClassName(candidate.bassPitchClass)
+                : null
+
+            return {
+                symbol: candidate.symbol,
+                type: candidate.type,
+                root: getPitchClassName(candidate.rootPitchClass),
+                bass: alternativeBass,
+                isSlashChord: candidate.isSlashChord,
+                score: candidate.score,
+                confidence: candidateConfidence,
+                relationToSelected: classifyAlternativeRelation({
+                    selectedSymbol: selected.symbol,
+                    selectedType: selected.type,
+                    selectedRoot: selected.root,
+                    selectedBass: selected.bass,
+                    selectedIsSlashChord: selected.isSlashChord,
+                    alternativeSymbol: candidate.symbol,
+                    alternativeType: candidate.type,
+                    alternativeRoot: getPitchClassName(candidate.rootPitchClass),
+                    alternativeBass,
+                    alternativeIsSlashChord: candidate.isSlashChord,
+                }),
+            }
+        })
+
+    const ambiguity = evaluateChordAmbiguity({
+        selected,
+        selectedScore: best.score,
+        alternatives,
+    })
+
+    let confidence = rawConfidence
+
+    if (ambiguity?.isAmbiguous) {
+        if (ambiguity.level === 'high') {
+            confidence *= 0.78
+        } else if (ambiguity.level === 'medium') {
+            confidence *= 0.88
+        } else {
+            confidence *= 0.94
+        }
+    }
+
+    selected.confidence = Math.max(0, Math.min(1, confidence))
 
     return {
         inputMidiNotes: normalized.midiNotes,
@@ -179,5 +239,7 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
         bassPitchClass: normalized.bassPitchClass,
         candidates: debugCandidates.slice(0, 20),
         selected,
+        alternatives,
+        ambiguity,
     }
 }

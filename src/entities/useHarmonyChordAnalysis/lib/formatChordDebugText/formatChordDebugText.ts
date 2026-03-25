@@ -50,6 +50,21 @@ export function formatChordDebugText(data: ChordAnalysisDebugData): string {
         })
         .join('\n')
 
+    const alternativesText = data.alternatives.length > 0
+        ? data.alternatives
+            .map((alternative, index) => [
+                `${index + 1}. ${alternative.symbol}`,
+                `type=${alternative.type}`,
+                `root=${alternative.root}`,
+                `bass=${alternative.bass ?? '-'}`,
+                `slash=${alternative.isSlashChord ? 'yes' : 'no'}`,
+                `score=${alternative.score}`,
+                `confidence=${alternative.confidence ?? 'null'}`,
+                `relation=${alternative.relationToSelected}`,
+            ].join(' | '))
+            .join('\n')
+        : 'No alternatives'
+
     return [
         'CHORD DEBUG',
         `input midi notes: [${data.inputMidiNotes.join(', ')}]`,
@@ -61,6 +76,15 @@ export function formatChordDebugText(data: ChordAnalysisDebugData): string {
         `symbol: ${data.selected?.symbol ?? 'Not detected'}`,
         `type: ${data.selected?.type ?? 'Not detected'}`,
         `confidence: ${data.selected?.confidence ?? 'null'}`,
+        '',
+        'ambiguity:',
+        `isAmbiguous: ${data.ambiguity?.isAmbiguous ?? false}`,
+        `level: ${data.ambiguity?.level ?? 'null'}`,
+        `reason: ${data.ambiguity?.reason ?? 'null'}`,
+        `primaryAlternatives: [${data.ambiguity?.primaryAlternatives.join(', ') ?? ''}]`,
+        '',
+        'alternatives:',
+        alternativesText,
         '',
         'top candidates:',
         candidatesText || 'No candidates',
