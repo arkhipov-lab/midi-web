@@ -54,6 +54,9 @@ export interface ChordScoreBreakdown {
     omissionBonus: number
     omissionPenalty: number
     finalScore: number
+    powerChordPenalty: number
+    exactOmissionShellBonus: number
+    incompleteConfidenceFactor: number
 }
 
 export interface ChordCandidateDebugItem {

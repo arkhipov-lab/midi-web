@@ -11,11 +11,14 @@ import {
     evaluateChordHeuristics,
 } from '@shared/lib'
 import {
+    getExactOmissionShellBonus,
+    getIncompleteConfidenceFactor,
     getIncompleteVoicingBonus,
     getInputCoverageBonus,
     getMissingThirdPenalty,
     getOmissionBonus,
     getOmissionPenalty,
+    getPowerChordPenalty,
     getSecondaryRootPenalty,
     getSimplicityBonus,
     getUnderExplainingPenalty,
@@ -38,6 +41,7 @@ interface CalculateChordScoreOptions {
     qualityDependsOnThird: boolean
     isIncompleteVoicingTemplate: boolean
     omissionLabelMode: 'none' | 'no3' | 'no5'
+    type: string
 }
 
 export function calculateChordScore(options: CalculateChordScoreOptions) {
@@ -59,6 +63,7 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
         qualityDependsOnThird,
         isIncompleteVoicingTemplate,
         omissionLabelMode,
+        type,
     } = options
 
     const matched = countMatchedPitchClasses(inputPitchClasses, templatePitchClasses)
@@ -124,6 +129,30 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
         omissionLabelMode,
         inputPitchClasses,
         extra,
+    })
+
+    const powerChordPenalty = getPowerChordPenalty({
+        type,
+        inputPitchClasses,
+        rootPitchClass,
+    })
+
+    const exactOmissionShellBonus = getExactOmissionShellBonus({
+        omissionLabelMode,
+        inputPitchClasses,
+        templatePitchClasses,
+        matchedRequired,
+        requiredPitchClasses,
+        extra,
+        missingRequired,
+    })
+
+    const incompleteConfidenceFactor = getIncompleteConfidenceFactor({
+        type,
+        isOmissionLabel: omissionLabelMode !== 'none',
+        incompleteVoicingBonus,
+        exactOmissionShellBonus,
+        missingThirdPenalty,
     })
 
     let finalScore = 0
@@ -277,6 +306,9 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
     finalScore += omissionBonus
     finalScore -= omissionPenalty
 
+    finalScore -= powerChordPenalty
+    finalScore += exactOmissionShellBonus
+
     return {
         matched,
         missing,
@@ -299,6 +331,9 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
         incompleteVoicingBonus,
         omissionBonus,
         omissionPenalty,
+        powerChordPenalty,
+        exactOmissionShellBonus,
+        incompleteConfidenceFactor,
     }
 }
 

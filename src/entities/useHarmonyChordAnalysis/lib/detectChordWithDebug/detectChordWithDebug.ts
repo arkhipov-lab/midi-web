@@ -83,6 +83,7 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
                 qualityDependsOnThird: template.qualityDependsOnThird ?? false,
                 isIncompleteVoicingTemplate: template.isIncompleteVoicingTemplate ?? false,
                 omissionLabelMode: template.omissionLabelMode ?? 'none',
+                type: template.type,
             })
 
             const debugCandidate = {
@@ -146,22 +147,11 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
 
     const best = candidates[0]
 
-    const confidenceBase = best.score / Math.max(1, normalized.pitchClasses.length * 24 + 48)
-    const missingThirdPenaltyFactor = best.breakdown.missingThirdPenalty > 0 ? 0.55 : 1
-    const incompleteFactor = best.breakdown.incompleteVoicingBonus > 0 ? 0.9 : 1
-    const omissionFactor = best.isOmissionLabel ? 0.72 : 1
-    const powerFactor = best.type === 'power' ? 0.7 : 1
+    const confidenceBase = best.score / (best.score + 60)
 
     const confidence = Math.max(
         0,
-        Math.min(
-            1,
-            confidenceBase
-            * missingThirdPenaltyFactor
-            * incompleteFactor
-            * omissionFactor
-            * powerFactor,
-        ),
+        Math.min(1, confidenceBase * best.breakdown.incompleteConfidenceFactor),
     )
 
     const selected: DetectedChordInfo = {

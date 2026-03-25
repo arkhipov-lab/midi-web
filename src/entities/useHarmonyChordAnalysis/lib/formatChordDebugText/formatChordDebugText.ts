@@ -43,6 +43,9 @@ export function formatChordDebugText(data: ChordAnalysisDebugData): string {
                 `omissionBonus=${breakdown.omissionBonus}`,
                 `omissionPenalty=${breakdown.omissionPenalty}`,
                 `final=${breakdown.finalScore}`,
+                `powerChordPenalty=${breakdown.powerChordPenalty}`,
+                `exactOmissionShellBonus=${breakdown.exactOmissionShellBonus}`,
+                `incompleteConfidenceFactor=${breakdown.incompleteConfidenceFactor}`,
             ].join(' | ')
         })
         .join('\n')

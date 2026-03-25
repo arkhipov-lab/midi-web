@@ -217,4 +217,53 @@ describe('calculateChordScore', () => {
         expect(dominantNo3.omissionBonus).toBeGreaterThan(0)
         expect(dominantNo3.finalScore).toBeGreaterThan(power.finalScore)
     })
+
+    it('penalizes power chord when third is present', () => {
+        const power = calculateChordScore({
+            type: 'power',
+            inputPitchClasses: [0, 4, 7],
+            templatePitchClasses: [0, 7],
+            requiredPitchClasses: [0, 7],
+            optionalPitchClasses: [],
+            omittablePitchClasses: [],
+            signaturePitchClasses: [],
+            bassPitchClass: 0,
+            rootPitchClass: 0,
+            templatePriority: 11,
+            category: 'triad',
+            requiresSeventh: false,
+            isSlashChord: false,
+            templateIntervalCount: 2,
+            qualityDependsOnThird: false,
+            isIncompleteVoicingTemplate: true,
+            omissionLabelMode: 'none',
+        })
+
+        expect(power.powerChordPenalty).toBeGreaterThan(0)
+    })
+
+    it('rewards exact omission shell matches', () => {
+        const shell = calculateChordScore({
+            type: 'dominant7No3',
+            inputPitchClasses: [0, 7, 10],
+            templatePitchClasses: [0, 7, 10],
+            requiredPitchClasses: [0, 7, 10],
+            optionalPitchClasses: [],
+            omittablePitchClasses: [],
+            signaturePitchClasses: [10],
+            bassPitchClass: 0,
+            rootPitchClass: 0,
+            templatePriority: 20,
+            category: 'seventh',
+            requiresSeventh: true,
+            isSlashChord: false,
+            templateIntervalCount: 3,
+            qualityDependsOnThird: false,
+            isIncompleteVoicingTemplate: true,
+            omissionLabelMode: 'no3',
+        })
+
+        expect(shell.exactOmissionShellBonus).toBeGreaterThan(0)
+        expect(shell.incompleteConfidenceFactor).toBeLessThan(1)
+    })
 })

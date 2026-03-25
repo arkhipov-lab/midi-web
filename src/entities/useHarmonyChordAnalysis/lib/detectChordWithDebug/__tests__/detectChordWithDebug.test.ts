@@ -316,4 +316,55 @@ describe('detectChordWithDebug', () => {
 
         expect(result.selected?.symbol).toBe('Cmaj7(no5)')
     })
+
+    it('keeps C below full triad when third is present and power chord is only partial', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            40: 100,
+            43: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('C')
+
+        const cScore = result.candidates.find((candidate) => candidate.symbol === 'C')?.score ?? 0
+        const c5Score = result.candidates.find((candidate) => candidate.symbol === 'C5')?.score ?? 0
+
+        expect(cScore).toBeGreaterThan(c5Score)
+    })
+
+    it('keeps Dsus2 above D5 when sus voicing is present', () => {
+        const result = detectChordWithDebug({
+            38: 100,
+            40: 100,
+            45: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('Dsus2')
+
+        const susScore = result.candidates.find((candidate) => candidate.symbol === 'Dsus2')?.score ?? 0
+        const powerScore = result.candidates.find((candidate) => candidate.symbol === 'D5')?.score ?? 0
+
+        expect(susScore).toBeGreaterThan(powerScore)
+    })
+
+    it('reduces confidence for power chord labels', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            43: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('C5')
+        expect(result.selected?.confidence ?? 1).toBeLessThan(1)
+    })
+
+    it('reduces confidence for omission labels', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            43: 100,
+            46: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('C7(no3)')
+        expect(result.selected?.confidence ?? 1).toBeLessThan(1)
+    })
 })
