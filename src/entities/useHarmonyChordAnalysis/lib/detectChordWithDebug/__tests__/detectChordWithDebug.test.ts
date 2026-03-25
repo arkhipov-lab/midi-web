@@ -266,4 +266,54 @@ describe('detectChordWithDebug', () => {
 
         expect(result.selected?.symbol).toBe('Cm')
     })
+
+    it('detects C7(no3) from root fifth and minor seventh', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            43: 100,
+            46: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('C7(no3)')
+    })
+
+    it('detects Cmaj7(no3) from root fifth and major seventh', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            43: 100,
+            47: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('Cmaj7(no3)')
+    })
+
+    it('detects C7(no5) from root third and minor seventh', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            40: 100,
+            46: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('C7(no5)')
+    })
+
+    it('detects Cm7(no5) from root minor third and minor seventh', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            39: 100,
+            46: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('Cm7(no5)')
+    })
+
+    it('detects Cmaj7(no5) from root third and major seventh', () => {
+        const result = detectChordWithDebug({
+            36: 100,
+            40: 100,
+            47: 100,
+        })
+
+        expect(result.selected?.symbol).toBe('Cmaj7(no5)')
+    })
 })

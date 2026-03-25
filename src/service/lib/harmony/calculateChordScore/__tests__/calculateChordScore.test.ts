@@ -174,4 +174,47 @@ describe('calculateChordScore', () => {
         expect(powerChord.incompleteVoicingBonus).toBeGreaterThan(0)
         expect(powerChord.finalScore).toBeGreaterThan(majorWithoutThird.finalScore)
     })
+
+    it('rewards omission-aware shell voicings over plain power interpretation when seventh identity is present', () => {
+        const dominantNo3 = calculateChordScore({
+            inputPitchClasses: [0, 7, 10],
+            templatePitchClasses: [0, 7, 10],
+            requiredPitchClasses: [0, 7, 10],
+            optionalPitchClasses: [],
+            omittablePitchClasses: [],
+            signaturePitchClasses: [10],
+            bassPitchClass: 0,
+            rootPitchClass: 0,
+            templatePriority: 20,
+            category: 'seventh',
+            requiresSeventh: true,
+            isSlashChord: false,
+            templateIntervalCount: 3,
+            qualityDependsOnThird: false,
+            isIncompleteVoicingTemplate: true,
+            omissionLabelMode: 'no3',
+        })
+
+        const power = calculateChordScore({
+            inputPitchClasses: [0, 7, 10],
+            templatePitchClasses: [0, 7],
+            requiredPitchClasses: [0, 7],
+            optionalPitchClasses: [],
+            omittablePitchClasses: [],
+            signaturePitchClasses: [],
+            bassPitchClass: 0,
+            rootPitchClass: 0,
+            templatePriority: 11,
+            category: 'triad',
+            requiresSeventh: false,
+            isSlashChord: false,
+            templateIntervalCount: 2,
+            qualityDependsOnThird: false,
+            isIncompleteVoicingTemplate: true,
+            omissionLabelMode: 'none',
+        })
+
+        expect(dominantNo3.omissionBonus).toBeGreaterThan(0)
+        expect(dominantNo3.finalScore).toBeGreaterThan(power.finalScore)
+    })
 })

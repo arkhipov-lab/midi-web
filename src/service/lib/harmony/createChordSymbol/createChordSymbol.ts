@@ -5,12 +5,15 @@ interface CreateChordSymbolOptions {
     symbolSuffix: string
     bassPitchClass: number | null
     templatePitchClasses: number[]
+    omissionLabelMode: 'none' | 'no3' | 'no5'
 }
 
 interface CreateChordSymbolResult {
     symbol: string
     bass: string | null
     isSlashChord: boolean
+    isOmissionLabel: boolean
+    omissionType: 'no3' | 'no5' | null
 }
 
 export function createChordSymbol(options: CreateChordSymbolOptions): CreateChordSymbolResult {
@@ -20,9 +23,11 @@ export function createChordSymbol(options: CreateChordSymbolOptions): CreateChor
         symbolSuffix,
         bassPitchClass,
         templatePitchClasses,
+        omissionLabelMode,
     } = options
 
     const rootName = getPitchClassName(rootPitchClass)
+    const omissionSuffix = omissionLabelMode === 'none' ? '' : `(${omissionLabelMode})`
 
     if (
         bassPitchClass === null
@@ -30,17 +35,21 @@ export function createChordSymbol(options: CreateChordSymbolOptions): CreateChor
         || !templatePitchClasses.includes(bassPitchClass)
     ) {
         return {
-            symbol: `${rootName}${symbolSuffix}`,
+            symbol: `${rootName}${symbolSuffix}${omissionSuffix}`,
             bass: null,
             isSlashChord: false,
+            isOmissionLabel: omissionLabelMode !== 'none',
+            omissionType: omissionLabelMode === 'none' ? null : omissionLabelMode,
         }
     }
 
     const bassName = getPitchClassName(bassPitchClass)
 
     return {
-        symbol: `${rootName}${symbolSuffix}/${bassName}`,
+        symbol: `${rootName}${symbolSuffix}${omissionSuffix}/${bassName}`,
         bass: bassName,
         isSlashChord: true,
+        isOmissionLabel: omissionLabelMode !== 'none',
+        omissionType: omissionLabelMode === 'none' ? null : omissionLabelMode,
     }
 }

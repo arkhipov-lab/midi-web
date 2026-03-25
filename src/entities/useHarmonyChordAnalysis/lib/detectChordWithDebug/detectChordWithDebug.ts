@@ -23,6 +23,8 @@ interface ChordCandidateInternal {
     score: number
     priority: number
     breakdown: ChordScoreBreakdown
+    isOmissionLabel: boolean
+    omissionType: 'no3' | 'no5' | null
 }
 
 export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysisDebugData {
@@ -61,6 +63,7 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
                 symbolSuffix: template.symbolSuffix,
                 bassPitchClass: normalized.bassPitchClass,
                 templatePitchClasses,
+                omissionLabelMode: template.omissionLabelMode ?? 'none',
             })
 
             const breakdown = calculateChordScore({
@@ -79,6 +82,7 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
                 templateIntervalCount: template.intervals.length,
                 qualityDependsOnThird: template.qualityDependsOnThird ?? false,
                 isIncompleteVoicingTemplate: template.isIncompleteVoicingTemplate ?? false,
+                omissionLabelMode: template.omissionLabelMode ?? 'none',
             })
 
             const debugCandidate = {
@@ -107,6 +111,8 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
                 score: breakdown.finalScore,
                 priority: template.priority,
                 breakdown,
+                isOmissionLabel: symbolInfo.isOmissionLabel,
+                omissionType: symbolInfo.omissionType,
             })
         }
     }
@@ -143,10 +149,19 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
     const confidenceBase = best.score / Math.max(1, normalized.pitchClasses.length * 24 + 48)
     const missingThirdPenaltyFactor = best.breakdown.missingThirdPenalty > 0 ? 0.55 : 1
     const incompleteFactor = best.breakdown.incompleteVoicingBonus > 0 ? 0.9 : 1
+    const omissionFactor = best.isOmissionLabel ? 0.72 : 1
+    const powerFactor = best.type === 'power' ? 0.7 : 1
 
     const confidence = Math.max(
         0,
-        Math.min(1, confidenceBase * missingThirdPenaltyFactor * incompleteFactor),
+        Math.min(
+            1,
+            confidenceBase
+            * missingThirdPenaltyFactor
+            * incompleteFactor
+            * omissionFactor
+            * powerFactor,
+        ),
     )
 
     const selected: DetectedChordInfo = {
@@ -158,6 +173,12 @@ export function detectChordWithDebug(activeNotes: ActiveNotesMap): ChordAnalysis
             ? getPitchClassName(best.bassPitchClass)
             : null,
         isSlashChord: best.isSlashChord,
+        isOmissionLabel: best.symbol.includes('(no3)') || best.symbol.includes('(no5)'),
+        omissionType: best.symbol.includes('(no3)')
+            ? 'no3'
+            : best.symbol.includes('(no5)')
+                ? 'no5'
+                : null,
     }
 
     return {

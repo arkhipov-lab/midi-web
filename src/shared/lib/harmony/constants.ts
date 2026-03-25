@@ -25,6 +25,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 10,
         category: 'triad',
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'minor',
@@ -35,6 +36,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 10,
         category: 'triad',
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'power',
@@ -48,6 +50,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         category: 'triad',
         qualityDependsOnThird: false,
         isIncompleteVoicingTemplate: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'sus2',
@@ -57,7 +60,8 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         symbolSuffix: 'sus2',
         priority: 12,
         category: 'triad',
-        qualityDependsOnThird: false
+        qualityDependsOnThird: false,
+        omissionLabelMode: 'none',
     },
     {
         type: 'sus4',
@@ -67,7 +71,8 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         symbolSuffix: 'sus4',
         priority: 12,
         category: 'triad',
-        qualityDependsOnThird: false
+        qualityDependsOnThird: false,
+        omissionLabelMode: 'none',
     },
     {
         type: 'dominant7',
@@ -78,6 +83,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 18,
         category: 'seventh',
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'major7',
@@ -88,6 +94,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 18,
         category: 'seventh',
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'minor7',
@@ -98,6 +105,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 18,
         category: 'seventh',
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'halfDiminished7',
@@ -108,6 +116,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 21,
         category: 'seventh',
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'diminished7',
@@ -118,6 +127,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 21,
         category: 'seventh',
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: '6',
@@ -129,6 +139,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 16,
         category: 'triad',
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'minor6',
@@ -140,6 +151,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 16,
         category: 'triad',
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'add9',
@@ -151,6 +163,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 15,
         category: 'triad',
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'minorAdd9',
@@ -162,6 +175,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 15,
         category: 'triad',
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'add11',
@@ -173,6 +187,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 15,
         category: 'triad',
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'minorAdd11',
@@ -184,6 +199,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 15,
         category: 'triad',
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: '6/9',
@@ -194,7 +210,8 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         symbolSuffix: '6/9',
         priority: 22,
         category: 'extended',
-        qualityDependsOnThird: false
+        qualityDependsOnThird: false,
+        omissionLabelMode: 'none'
     },
     {
         type: '7sus4',
@@ -204,7 +221,8 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         symbolSuffix: '7sus4',
         priority: 19,
         category: 'seventh',
-        qualityDependsOnThird: false
+        qualityDependsOnThird: false,
+        omissionLabelMode: 'none',
     },
     {
         type: '9',
@@ -218,6 +236,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         category: 'extended',
         requiresSeventh: true,
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'major9',
@@ -231,6 +250,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         category: 'extended',
         requiresSeventh: true,
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'minor9',
@@ -244,6 +264,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         category: 'extended',
         requiresSeventh: true,
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: '11',
@@ -256,6 +277,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 27,
         category: 'extended',
         requiresSeventh: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'minor11',
@@ -268,6 +290,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         priority: 27,
         category: 'extended',
         requiresSeventh: true,
+        omissionLabelMode: 'none',
     },
     {
         type: '13',
@@ -281,6 +304,7 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         category: 'extended',
         requiresSeventh: true,
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
     },
     {
         type: 'major13',
@@ -294,5 +318,81 @@ export const CHORD_TEMPLATES: ChordTemplate[] = [
         category: 'extended',
         requiresSeventh: true,
         qualityDependsOnThird: true,
+        omissionLabelMode: 'none',
+    },
+    {
+        type: 'dominant7No3',
+        intervals: [0, 7, 10],
+        requiredIntervals: [0, 7, 10],
+        optionalIntervals: [],
+        omittableIntervals: [],
+        signatureIntervals: [10],
+        symbolSuffix: '7',
+        priority: 20,
+        category: 'seventh',
+        requiresSeventh: true,
+        qualityDependsOnThird: false,
+        isIncompleteVoicingTemplate: true,
+        omissionLabelMode: 'no3',
+    },
+    {
+        type: 'major7No3',
+        intervals: [0, 7, 11],
+        requiredIntervals: [0, 7, 11],
+        optionalIntervals: [],
+        omittableIntervals: [],
+        signatureIntervals: [11],
+        symbolSuffix: 'maj7',
+        priority: 20,
+        category: 'seventh',
+        requiresSeventh: true,
+        qualityDependsOnThird: false,
+        isIncompleteVoicingTemplate: true,
+        omissionLabelMode: 'no3',
+    },
+    {
+        type: 'minor7No5',
+        intervals: [0, 3, 10],
+        requiredIntervals: [0, 3, 10],
+        optionalIntervals: [],
+        omittableIntervals: [],
+        signatureIntervals: [10],
+        symbolSuffix: 'm7',
+        priority: 20,
+        category: 'seventh',
+        requiresSeventh: true,
+        qualityDependsOnThird: true,
+        isIncompleteVoicingTemplate: true,
+        omissionLabelMode: 'no5',
+    },
+    {
+        type: 'dominant7No5',
+        intervals: [0, 4, 10],
+        requiredIntervals: [0, 4, 10],
+        optionalIntervals: [],
+        omittableIntervals: [],
+        signatureIntervals: [10],
+        symbolSuffix: '7',
+        priority: 20,
+        category: 'seventh',
+        requiresSeventh: true,
+        qualityDependsOnThird: true,
+        isIncompleteVoicingTemplate: true,
+        omissionLabelMode: 'no5',
+    },
+    {
+        type: 'major7No5',
+        intervals: [0, 4, 11],
+        requiredIntervals: [0, 4, 11],
+        optionalIntervals: [],
+        omittableIntervals: [],
+        signatureIntervals: [11],
+        symbolSuffix: 'maj7',
+        priority: 20,
+        category: 'seventh',
+        requiresSeventh: true,
+        qualityDependsOnThird: true,
+        isIncompleteVoicingTemplate: true,
+        omissionLabelMode: 'no5',
     },
 ]

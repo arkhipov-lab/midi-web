@@ -18,6 +18,7 @@ export interface ChordTemplate {
     requiresSeventh?: boolean
     qualityDependsOnThird?: boolean
     isIncompleteVoicingTemplate?: boolean
+    omissionLabelMode?: 'none' | 'no3' | 'no5'
 }
 
 export interface DetectedChordInfo {
@@ -27,6 +28,8 @@ export interface DetectedChordInfo {
     confidence: number | null
     bass: string | null
     isSlashChord: boolean
+    isOmissionLabel?: boolean
+    omissionType?: 'no3' | 'no5' | null
 }
 
 export interface ChordScoreBreakdown {
@@ -48,6 +51,8 @@ export interface ChordScoreBreakdown {
     underExplainingPenalty: number
     missingThirdPenalty: number
     incompleteVoicingBonus: number
+    omissionBonus: number
+    omissionPenalty: number
     finalScore: number
 }
 

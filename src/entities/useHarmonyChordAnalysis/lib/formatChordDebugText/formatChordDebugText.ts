@@ -40,6 +40,8 @@ export function formatChordDebugText(data: ChordAnalysisDebugData): string {
                 `underExplainingPenalty=${breakdown.underExplainingPenalty}`,
                 `missingThirdPenalty=${breakdown.missingThirdPenalty}`,
                 `incompleteVoicingBonus=${breakdown.incompleteVoicingBonus}`,
+                `omissionBonus=${breakdown.omissionBonus}`,
+                `omissionPenalty=${breakdown.omissionPenalty}`,
                 `final=${breakdown.finalScore}`,
             ].join(' | ')
         })

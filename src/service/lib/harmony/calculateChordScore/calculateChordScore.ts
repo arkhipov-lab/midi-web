@@ -14,6 +14,8 @@ import {
     getIncompleteVoicingBonus,
     getInputCoverageBonus,
     getMissingThirdPenalty,
+    getOmissionBonus,
+    getOmissionPenalty,
     getSecondaryRootPenalty,
     getSimplicityBonus,
     getUnderExplainingPenalty,
@@ -35,6 +37,7 @@ interface CalculateChordScoreOptions {
     templateIntervalCount: number
     qualityDependsOnThird: boolean
     isIncompleteVoicingTemplate: boolean
+    omissionLabelMode: 'none' | 'no3' | 'no5'
 }
 
 export function calculateChordScore(options: CalculateChordScoreOptions) {
@@ -55,6 +58,7 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
         templateIntervalCount,
         qualityDependsOnThird,
         isIncompleteVoicingTemplate,
+        omissionLabelMode,
     } = options
 
     const matched = countMatchedPitchClasses(inputPitchClasses, templatePitchClasses)
@@ -106,6 +110,20 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
         matchedRequired,
         requiredPitchClasses,
         isIncompleteVoicingTemplate,
+    })
+
+    const omissionBonus = getOmissionBonus({
+        omissionLabelMode,
+        matchedRequired,
+        requiredPitchClasses,
+        missingRequired,
+        inputPitchClasses,
+    })
+
+    const omissionPenalty = getOmissionPenalty({
+        omissionLabelMode,
+        inputPitchClasses,
+        extra,
     })
 
     let finalScore = 0
@@ -256,6 +274,9 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
     finalScore -= missingThirdPenalty
     finalScore += incompleteVoicingBonus
 
+    finalScore += omissionBonus
+    finalScore -= omissionPenalty
+
     return {
         matched,
         missing,
@@ -276,6 +297,8 @@ export function calculateChordScore(options: CalculateChordScoreOptions) {
         finalScore,
         missingThirdPenalty,
         incompleteVoicingBonus,
+        omissionBonus,
+        omissionPenalty,
     }
 }
 
