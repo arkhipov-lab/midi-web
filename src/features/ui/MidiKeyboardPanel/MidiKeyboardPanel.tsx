@@ -10,14 +10,16 @@ import {
 } from './MidiKeyboardPanel.styles'
 
 interface MidiKeyboardPanelProps {
-    activeNotes: ActiveNotesMap
+    pressedNotes: ActiveNotesMap
+    soundingNotes: ActiveNotesMap
     sustainPressed: boolean
 }
 
 export const MidiKeyboardPanel: React.FC<MidiKeyboardPanelProps> = (props) => {
 
     const {
-        activeNotes,
+        pressedNotes,
+        soundingNotes,
         sustainPressed,
     } = props
 
@@ -25,7 +27,8 @@ export const MidiKeyboardPanel: React.FC<MidiKeyboardPanelProps> = (props) => {
         <StyledMidiKeyboardPanel>
             <MidiKeyboardMidiKeyboardContainer>
                 <MidiKeyboard
-                    activeNotes={activeNotes}
+                    pressedNotes={pressedNotes}
+                    soundingNotes={soundingNotes}
                 />
             </MidiKeyboardMidiKeyboardContainer>
 

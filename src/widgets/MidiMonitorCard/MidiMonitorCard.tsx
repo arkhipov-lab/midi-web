@@ -13,7 +13,8 @@ const {Title, Text} = Typography
 export const MidiMonitorCard: React.FC = () => {
 
     const {
-        activeNotes,
+        pressedNotes,
+        soundingNotes,
         sustainPressed,
         handleMidiMessage,
         resumeAudio,
@@ -30,7 +31,7 @@ export const MidiMonitorCard: React.FC = () => {
         chord,
         debug,
         debugText,
-    } = useHarmonyChordAnalysis(activeNotes)
+    } = useHarmonyChordAnalysis(soundingNotes)
 
     const handleCopyChordDebug = useCallback(async () => {
         await navigator.clipboard.writeText(debugText)
@@ -126,7 +127,8 @@ export const MidiMonitorCard: React.FC = () => {
                 title='Keyboard'
             >
                 <MidiKeyboardPanel
-                    activeNotes={activeNotes}
+                    pressedNotes={pressedNotes}
+                    soundingNotes={soundingNotes}
                     sustainPressed={sustainPressed}
                 />
             </Card>

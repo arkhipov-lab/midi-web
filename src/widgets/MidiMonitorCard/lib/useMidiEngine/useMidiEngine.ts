@@ -6,9 +6,11 @@ import {useMidiSynth} from '@entities/useMidiSynth'
 export function useMidiEngine() {
 
     const {
-        activeNotes,
+        pressedNotes,
+        soundingNotes,
         sustainPressed,
         handleMidiMessage: handleMidiMessageForState,
+        activeNotes,
     } = useMidiPerformanceState()
 
     const {
@@ -22,9 +24,12 @@ export function useMidiEngine() {
     }, [handleMidiMessageForState, handleMidiMessageForAudio])
 
     return {
-        activeNotes,
+        pressedNotes,
+        soundingNotes,
         sustainPressed,
         handleMidiMessage,
         resumeAudio,
+        // Same as soundingNotes
+        activeNotes,
     }
 }
