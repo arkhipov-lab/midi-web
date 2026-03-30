@@ -9,7 +9,7 @@ export interface PerformanceInputEvent {
 
 export interface RecordedMidiEvent {
     source: PerformanceInputSource
-    timeMs: number
+    atMs: number
     message: ParsedMidiMessage
 }
 

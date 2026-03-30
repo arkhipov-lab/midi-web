@@ -6,18 +6,18 @@ import type {ParsedMidiMessage} from '@shared/lib'
 
 export function mapParsedMidiMessageToRecordedEvent(params: {
     source: PerformanceInputSource
-    timeMs: number
+    atMs: number
     message: ParsedMidiMessage
 }): RecordedMidiEvent {
     const {
         source,
-        timeMs,
+        atMs,
         message,
     } = params
 
     return {
         source,
-        timeMs,
+        atMs,
         message,
     }
 }

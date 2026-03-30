@@ -7,6 +7,7 @@ import {FullWidthSpace} from './MidiMonitorCard.styles'
 import {useMidiEngine} from './lib'
 import {useHarmonyChordAnalysis} from '@entities/useHarmonyChordAnalysis'
 import {HarmonyChordPanel, HarmonyChordDebugPanel} from '@features/ui'
+import {useMidiPlayback} from '@entities/useMidiPlayback'
 
 const {Title, Text} = Typography
 
@@ -18,6 +19,7 @@ export const MidiMonitorCard: React.FC = () => {
         sustainPressed,
         handleMidiMessage,
         handlePerformanceEvent,
+        recordedEvents,
         resumeAudio,
     } = useMidiEngine()
 
@@ -96,6 +98,14 @@ export const MidiMonitorCard: React.FC = () => {
         })
     }, [handlePerformanceEvent])
 
+    const {
+        play,
+        stop,
+        isPlaying,
+    } = useMidiPlayback({
+        onEvent: handlePerformanceEvent,
+    })
+
     useMidiInputListener({
         midiAccess,
         selectedInputId,
@@ -169,6 +179,25 @@ export const MidiMonitorCard: React.FC = () => {
                     onNotePress={handleVirtualNotePress}
                     onNoteRelease={handleVirtualNoteRelease}
                 />
+
+                <div style={{marginTop: 12, display: 'flex', gap: 8}}>
+                    <Button
+                        type='primary'
+                        onClick={() => {
+                            void resumeAudio()
+                            play(recordedEvents)
+                        }}
+                        disabled={isPlaying || recordedEvents.length === 0}
+                    >
+                        {isPlaying ? 'Playing...' : 'Play'}
+                    </Button>
+                    <Button
+                        onClick={stop}
+                        disabled={!isPlaying}
+                    >
+                        Stop
+                    </Button>
+                </div>
             </Card>
 
             <Card title='Chord analysis'>

@@ -14,15 +14,18 @@ export function useMidiRecorder() {
         message: ParsedMidiMessage,
         source: PerformanceInputSource,
     ) => {
+        // Prevent feedback loop: playback must not be recorded.
+        if (source === 'playback') return
+
         const now = Date.now()
         if (startedAtMsRef.current === null) {
             startedAtMsRef.current = now
         }
 
-        const timeMs = now - (startedAtMsRef.current ?? now)
+        const atMs = now - (startedAtMsRef.current ?? now)
         const recordedEvent = mapParsedMidiMessageToRecordedEvent({
             source,
-            timeMs,
+            atMs,
             message,
         })
 

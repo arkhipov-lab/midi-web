@@ -23,6 +23,7 @@ export function useMidiEngine() {
     } = useMidiSynth(true)
 
     const {
+        recordedEvents,
         handleMidiMessage: handleMidiMessageForRecorder,
     } = useMidiRecorder()
 
@@ -49,6 +50,7 @@ export function useMidiEngine() {
         sustainPressed,
         handlePerformanceEvent,
         handleMidiMessage,
+        recordedEvents,
         resumeAudio,
         // Same as soundingNotes
         activeNotes,
