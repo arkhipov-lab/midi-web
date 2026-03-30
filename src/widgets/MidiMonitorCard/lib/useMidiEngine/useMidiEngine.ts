@@ -6,6 +6,7 @@ import type {
 import {useMidiPerformanceState} from '@entities/useMidiPerformanceState'
 import {useMidiSynth} from '@entities/useMidiSynth'
 import {useMidiRecorder} from '@entities/useMidiRecorder'
+import {useMidiPlayback} from '@entities/useMidiPlayback'
 
 export function useMidiEngine() {
 
@@ -23,18 +24,24 @@ export function useMidiEngine() {
     } = useMidiSynth(true)
 
     const {
+        isRecording,
+        recordingBuffer,
         recordedEvents,
-        handleMidiMessage: handleMidiMessageForRecorder,
+        hasRecording,
+        startRecording,
+        stopRecording,
+        clearRecording,
+        handlePerformanceEvent: handlePerformanceEventForRecorder,
     } = useMidiRecorder()
 
     const handlePerformanceEvent = useCallback((event: PerformanceInputEvent) => {
         handleMidiMessageForState(event.message)
         handleMidiMessageForAudio(event.message)
-        handleMidiMessageForRecorder(event.message, event.source)
+        handlePerformanceEventForRecorder(event)
     }, [
         handleMidiMessageForState,
         handleMidiMessageForAudio,
-        handleMidiMessageForRecorder,
+        handlePerformanceEventForRecorder,
     ])
 
     const handleMidiMessage = useCallback((message: ParsedMidiMessage) => {
@@ -44,14 +51,38 @@ export function useMidiEngine() {
         })
     }, [handlePerformanceEvent])
 
+    const {
+        play,
+        stop: stopPlayback,
+        isPlaying,
+    } = useMidiPlayback({
+        onEvent: handlePerformanceEvent,
+    })
+
+    const playRecording = useCallback(() => {
+        play(recordedEvents)
+    }, [
+        play,
+        recordedEvents,
+    ])
+
     return {
         pressedNotes,
         soundingNotes,
         sustainPressed,
         handlePerformanceEvent,
         handleMidiMessage,
-        recordedEvents,
         resumeAudio,
+        isRecording,
+        isPlaying,
+        hasRecording,
+        recordingBuffer,
+        recordedEvents,
+        startRecording,
+        stopRecording,
+        clearRecording,
+        playRecording,
+        stopPlayback,
         // Same as soundingNotes
         activeNotes,
     }
