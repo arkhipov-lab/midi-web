@@ -89,3 +89,5 @@ src/
   service/
   shared/
   core/
+
+see [ARCHITECTURE.md](./ARCHITECTURE.md)
