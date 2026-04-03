@@ -1,154 +1,137 @@
-# 🔢 Versioning
+# 🎹 MIDI Analysis System
 
-Project follows Semantic Versioning (SemVer):
+A system that records MIDI performance and explains what was played in terms of harmony, key, rhythm, and musical meaning.
 
+See full product definition:  [PRODUCT_VISION.md](./PRODUCT_VISION.md)
+
+
+---
+
+# 🚀 What This Is
+
+This is NOT just a MIDI recorder.
+
+It is:
+
+> a system that transforms raw performance into understandable musical knowledge
+
+
+---
+
+# 📦 Monorepo Structure
+
+[/web](./web)  → frontend application (React + Vite)
+
+[/api](./api)  → backend analysis engine (FastAPI)
+
+[PRODUCT_VISION.md](./PRODUCT_VISION.md)
+[DOMAIN_GLOSSARY.md](./DOMAIN_GLOSSARY.md)
+
+# 🧠 Core Idea
+
+User plays music → system answers:
+- What did I play?
+- What key is this?
+- What chords are here?
+- What can I improve?
+
+# 🏗️ Architecture Overview
+
+## Frontend (web)
+- React + TypeScript
+- Vite
+- Extended FSD architecture
+- deterministic MIDI + harmony logic
+
+## Backend (api)
+- FastAPI
+- layered architecture:
+```text
+api → application → domain → infrastructure
+```
+- analysis-first system
+
+# 🤖 AI Role
+
+## AI (LLM) is used ONLY for:
+- explanation
+- feedback
+- interpretation
+
+## AI is NOT used for:
+- core analysis
+- musical truth
+
+# 🧭 Development Principles
+
+- deterministic logic first
+- domain-driven thinking
+- no over-engineering
+- LLM as assistant, not decision-maker
+
+# ▶️ Getting Started
+
+## Frontend
+```bash
+cd web
+npm install
+npm run dev
+```
+
+
+## Backend
+```bash
+cd api
+pipenv install
+pipenv run uvicorn app.main:app --reload
+```
+
+# 🧪 Testing
+
+## Frontend
+
+```bash
+cd web
+npm test
+```
+
+## Backend
+
+```bash
+cd api
+pipenv run pytest
+```
+
+# 📌 Versioning
+
+Project follows Semantic Versioning:
+```text
 MAJOR.MINOR.PATCH
+```
 
-Example:
-
-1.4.2
-
----
-
-## 📌 Version Rules
-
-PATCH (1.4.2 → 1.4.3)
-- bug fixes
-- refactoring without behavior changes
-- tests / CI changes
-- internal improvements
-
-MINOR (1.4.2 → 1.5.0)
-- new features
-- extended functionality
-- backward-compatible changes
-
-MAJOR (1.4.2 → 2.0.0)
-- breaking changes
-- incompatible updates
-- changes in data formats or contracts
-
----
-
-## 🏷️ Version Bump Process
-
-For every PR merged into main, one of the following labels must be set:
-
-- version:patch
-- version:minor
-- version:major
-
-After merge:
-- VERSION file is updated
-- package.json version is updated
-- git tag vX.Y.Z is created
-
----
+Version is stored in:
+- [VERSION](./VERSION)
+- [web/package.json](./web/package.json)
+- [web/package-lock.json](./web/package-lock.json)
 
 # 🔀 Git Workflow
 
-## Branches
+- main → production
+- develop → integration
+- feature/* → features
+- */base → epics
 
-- main — production / releases
-- develop — integration branch
-- */base — long-lived branches for large features (epics)
-- feature/* — short-lived feature branches
+# 🧠 Key Concept
 
----
+This project is not about recording music.
 
-## Workflow
+It is about:
 
-Small features:
-feature/* → develop → main
+> understanding what was played
 
-Large features:
-develop → feature-name/base → feature/*
+# Final Note
 
-Flow:
-feature/* → feature-name/base → develop → main
-
----
-
-## Rules
-
-- Only stable code goes to main
-- develop is for integration
-- */base is for grouping related features
-- */base branch is deleted after merge to develop
-
----
-
-## Important
-
-Avoid:
-feature/a → feature/b → feature/c
-
-Use:
-feature/a → base
-feature/b → base
-feature/c → base
-
----
-
-# 📝 Commit Convention
-
-Format:
-type: description
-
-Types:
-
-feat: new feature  
-fix: bug fix  
-chore: config / maintenance  
-refactor: internal code changes  
-test: tests  
-build: build / CI  
-docs: documentation
-
-Examples:
-
-feat: add midi input listener  
-fix: correct note-off handling  
-refactor: split midi service  
-test: add app render test  
-build: configure github actions
-
----
-
-## Breaking Changes
-
-feat!: change session storage format
-
-or
-
-feat: change session format
-
-BREAKING CHANGE: session structure updated
-
----
-
-# 🤖 CI
-
-On pull requests:
-- tests
-- build
-
-On merge to main:
-- automatic version bump
-- git tag creation
-
----
-
-# 📁 VERSION File
-
-The project includes a VERSION file.
-
-This file is the single source of truth for the application version.
-
----
-
-# ⚠️ Rules
-
-- Do not merge into main without a version label
-- Do not commit directly to main
-- Always use pull requests
+This project is built as a controlled system:
+- architecture is fixed
+- terminology is fixed
+- behavior is constrained
